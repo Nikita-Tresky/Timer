@@ -30,7 +30,7 @@ QuadEncoder positionEncoder(1, ENCODER_A_PIN, ENCODER_B_PIN, 1);
 // void LED_ON()
 // {
 //     digitalWriteFast(LED, HIGH); 
-//     t4.trigger(10'000);                  // trigger t4 to switch of after 10ms
+//     t4.trigger(10'000);  // 10ms
 // }
 
 // void LED_OFF()
@@ -52,7 +52,7 @@ int getRotation(){
 }
 
 void Blinked(){
-    if(ledState == LOW && getRotation() == currentStateA){
+    if(ledState == LOW && currentStateA != _mCurrentPosition){    // && getRotation() == currentStateA
         ledState = HIGH;
         blinkCount = blinkCount +1;
     }else{
@@ -65,7 +65,7 @@ void Blinked(){
 void setup(){
 
     Serial.begin(9600); // initalising baud rate
-    while (!Serial && millis() < 5000); // USB connection valid for 5sec after disconnection
+    while (!Serial && millis() < 5000); 
    
 
     lastStateA = digitalRead(outputA);
@@ -122,17 +122,17 @@ void loop(){
             currentDirectory = "Anticlockwise";
             // t4.begin(LED_ON); 
             // t4.begin(LED_OFF);
-            // digitalWriteFast(LED, HIGH);
-            // delay(100);
-            // digitalWriteFast(LED, LOW);
+            digitalWriteFast(LED, HIGH);
+            delay(100);
+            digitalWriteFast(LED, LOW);
         }else{
             counter ++;
             currentDirectory = "Clockwise";
             // t4.begin(LED_ON);
             // t4.begin(LED_OFF);
-            // digitalWriteFast(LED, HIGH);
-            // delay(100);
-            // digitalWriteFast(LED, LOW);
+            digitalWriteFast(LED, HIGH);
+            delay(100);
+            digitalWriteFast(LED, LOW);
         }
 
     Serial.println();
@@ -140,7 +140,6 @@ void loop(){
     Serial.print(currentDirectory);
     Serial.print(" | Counter: ");
     Serial.println(counter);
-    //Serial.print("Starts Blinking");
     Serial.println();
    
     }
@@ -148,7 +147,6 @@ void loop(){
     blinkCopy = blinkCount;
     interrupts();
 
-   // Serial.print("blinkCount: ");
     Serial.println(blinkCopy);
     Serial.print("Position Counter Angle: ");
     Serial.println(getAngle());
